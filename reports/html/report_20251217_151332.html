@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SafeHome-AI Network Security Report</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f3f4f6;
+      color: #111827;
+      margin: 0;
+      padding: 24px;
+    }
+    h1, h2, h3 {
+      margin-top: 0;
+    }
+    .wrapper {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .card {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 18px 22px;
+      margin-bottom: 18px;
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+      border: 1px solid #e5e7eb;
+    }
+    .muted {
+      color: #6b7280;
+      font-size: 0.92rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+    th, td {
+      border-bottom: 1px solid #e5e7eb;
+      padding: 8px 10px;
+      text-align: left;
+    }
+    th {
+      background: #f9fafb;
+      font-weight: 600;
+    }
+    tr:nth-child(even) td {
+      background: #f9fafb;
+    }
+    .label {
+      font-weight: 600;
+      color: #4b5563;
+      width: 220px;
+      padding-right: 16px;
+    }
+    .value {
+      color: #111827;
+    }
+    .pill {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    .pill-high {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+    .pill-medium {
+      background: #fef3c7;
+      color: #92400e;
+    }
+    .pill-low {
+      background: #dcfce7;
+      color: #166534;
+    }
+    .pill-neutral {
+      background: #e5e7eb;
+      color: #374151;
+    }
+    ul {
+      margin-top: 4px;
+      margin-bottom: 8px;
+      padding-left: 18px;
+    }
+    .section-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .section-subtitle {
+      font-size: 0.92rem;
+      color: #6b7280;
+      margin-bottom: 4px;
+    }
+    .small {
+      font-size: 0.8rem;
+      color: #6b7280;
+    }
+
+    /* Device tiles */
+    .device-card {
+      border-radius: 10px;
+      border: 1px solid #e5e7eb;
+      padding: 10px 14px;
+      margin-bottom: 10px;
+      background: #f9fafb;
+    }
+    .device-card-high {
+      border-left: 4px solid #b91c1c;
+    }
+    .device-card-medium {
+      border-left: 4px solid #d97706;
+    }
+    .device-card-low {
+      border-left: 4px solid #16a34a;
+    }
+    .device-header {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+
+    <div class="card">
+      <h1>SafeHome-AI – Network Security Report</h1>
+      <p class="muted">
+        Application: SafeHome-AI v2.0.0 · Report ID: SAFEHOME-20251217_151332
+      </p>
+
+      <div class="section-title">Executive summary</div>
+      <p>
+        This report summarises the results of a security scan on the network
+        <strong>192.168.56.0/24</strong>. A total of <strong>1</strong>
+        devices were detected. Based on exposed services and simple risk rules,
+        the overall risk level for this network is
+        <span class="pill pill-high">High risk</span>.
+      </p>
+      <p>
+        Devices classified as <strong>high risk</strong> should be reviewed first,
+        followed by <strong>medium risk</strong> devices. Low-risk devices are
+        typically well-behaved or expose only minimal services.
+      </p>
+    </div>
+
+    <div class="card">
+      <h2>1. Risk overview</h2>
+
+      <table style="margin-bottom: 10px;">
+        <tr>
+          <td class="label">High-risk devices</td>
+          <td class="value"><span class="pill pill-high">1</span></td>
+        </tr>
+        <tr>
+          <td class="label">Medium-risk devices</td>
+          <td class="value"><span class="pill pill-medium">0</span></td>
+        </tr>
+        <tr>
+          <td class="label">Low-risk devices</td>
+          <td class="value"><span class="pill pill-low">0</span></td>
+        </tr>
+      </table>
+
+      <div class="section-subtitle">How to interpret these levels</div>
+      <ul>
+        <li><strong>High risk</strong> – Devices exposing sensitive services (for example, remote administration, SMB,
+            or web interfaces) that may require immediate review or hardening.</li>
+        <li><strong>Medium risk</strong> – Devices exposing common services that should be monitored and restricted to
+            trusted users wherever possible.</li>
+        <li><strong>Low risk</strong> – Devices with limited exposure or only well-known, low-risk services.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>2. Device summary</h2>
+      <p class="muted">
+        Summary table of all detected devices with key details.
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>IP address</th>
+            <th>Vendor</th>
+            <th>Hostname</th>
+            <th>Open ports</th>
+            <th>Risk</th>
+            <th>Score</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr>
+            <td>192.168.56.1</td>
+            <td></td>
+            <td></td>
+            <td>445</td>
+            <td><span class="pill pill-high">High</span></td>
+            <td>-</td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2>3. Detailed risk notes</h2>
+      <p class="muted">
+        This section explains why each device received its classification and
+        which services contributed to the assigned risk level.
+      </p>
+
+      <div class="device-card device-card-high">
+        <div class="device-header">Device: 192.168.56.1</div>
+        <p>
+          <strong>Vendor:</strong> Unknown vendor
+          &nbsp; | &nbsp;
+          <strong>Hostname:</strong> -<br>
+          <strong>Risk level:</strong> High
+          &nbsp; | &nbsp;
+          <strong>Score:</strong> -
+        </p>
+<p>Key contributing factors:</p><ul><li>High-risk ports open: [445]</li><li>Vendor unknown; could be unmanaged or unlabelled device.</li></ul></div>
+    </div>
+
+    <div class="card">
+      <h2>Appendix A – Scan audit information</h2>
+      <table>
+        <tr><td class="label">Network scanned</td><td class="value">192.168.56.0/24</td></tr>
+        <tr><td class="label">Scan started at</td><td class="value">2025-12-17 15:13:15</td></tr>
+        <tr><td class="label">Scan finished at</td><td class="value">2025-12-17 15:13:32</td></tr>
+        <tr><td class="label">Scan duration (seconds)</td><td class="value">17.304976</td></tr>
+        <tr><td class="label">Devices detected</td><td class="value">1</td></tr>
+        <tr><td class="label">Creator username</td><td class="value">Vidya Rao</td></tr>
+        <tr><td class="label">Creator hostname</td><td class="value">Vzee</td></tr>
+        <tr><td class="label">Creator IP (within scanned network)</td><td class="value">192.168.56.1</td></tr>
+      </table>
+      <p class="small">
+        This section is intended to support local audit trails, lab documentation
+        and internal reviews. Store this report according to your organisation's
+        security policy.
+      </p>
+    </div>
+
+    <div class="card">
+      <p class="small">
+        Disclaimer: SafeHome-AI is intended for scanning networks that you own or
+        administer. Use on third-party networks without permission may violate
+        applicable laws or internal policies.
+      </p>
+    </div>
+
+  </div> <!-- wrapper -->
+</body>
+</html>

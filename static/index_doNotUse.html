@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>SafeHome-AI 2.0</title>
+  <style>
+    body { font-family: Arial, sans-serif; background:#0f172a; color:#e5e7eb; padding:20px; margin:0; }
+    h2 { margin-top:0; }
+    .section { margin-bottom:20px; padding:16px; border-radius:10px; background:#020617; border:1px solid #1f2937; }
+    label { font-weight:bold; font-size:0.9rem; }
+    select, button { padding:8px 10px; margin-top:8px; border-radius:6px; border:1px solid #4b5563; background:#020617; color:#e5e7eb; }
+    button { cursor:pointer; border:none; background:linear-gradient(135deg,#1d4ed8,#22c1c3); color:#f9fafb; font-weight:600; }
+    button:disabled { opacity:0.6; cursor:default; }
+    small { color:#9ca3af; }
+    table { width:100%; border-collapse:collapse; margin-top:12px; font-size:0.85rem; }
+    th, td { border-bottom:1px solid #334155; padding:6px; text-align:left; }
+    th { background:#020617; position:sticky; top:0; }
+    .high { color:#f87171; font-weight:600; }
+    .medium { color:#facc15; font-weight:600; }
+    .low { color:#4ade80; font-weight:600; }
+    #status { margin-top:8px; font-size:0.9rem; color:#a5b4fc; }
+    #current-net { margin-top:6px; font-size:0.85rem; color:#9ca3af; }
+  </style>
+</head>
+<body>
+
+<h2>SafeHome-AI 2.0</h2>
+<p style="color:#9ca3af; font-size:0.9rem;">
+  Local home & lab network scanner. Runs only on this machine and scans only the networks that this device is connected to.
+</p>
+
+<div class="section">
+  <label for="networks">Step 1 – Choose a network to scan</label><br>
+  <select id="networks"></select>
+  <button type="button" id="refresh-btn" style="margin-left:8px;">Refresh networks</button>
+  <div id="current-net"></div>
+
+  <div style="margin-top:12px;">
+    <button type="button" id="scan-btn">Step 2 – Scan selected network</button>
+  </div>
+
+  <p id="status"></p>
+
+  <small>
+    Note: Please scan only networks that you own or administer (for example, your home Wi-Fi or your own lab network).
+    SafeHome-AI runs locally and does not send scan data to any external server.
+  </small>
+</div>
+
+<div class="section">
+  <div style="font-weight:bold; font-size:0.95rem;">Scan results</div>
+  <p id="summary" style="color:#9ca3af; font-size:0.9rem;"></p>
+
+  <table id="results" style="display:none">
+    <thead>
+      <tr>
+        <th>IP</th>
+        <th>Vendor</th>
+        <th>Open Ports</th>
+        <th>Risk</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <p style="margin-top:10px;">
+    <a href="/report/html" target="_blank">Open detailed HTML report</a>
+  </p>
+</div>
+
+<script>
+let networksCache = [];
+
+async function loadNetworks(){
+  const status = document.getElementById('status');
+  const sel = document.getElementById('networks');
+  const currentNet = document.getElementById('current-net');
+  const scanBtn = document.getElementById('scan-btn');
+
+  status.textContent = 'Detecting local networks...';
+  sel.innerHTML = '';
+  currentNet.textContent = '';
+  scanBtn.disabled = true;
+
+  try {
+    const r = await fetch('/api/networks');
+    const d = await r.json();
+    networksCache = d.networks || [];
+
+    if (networksCache.length === 0){
+      const o = document.createElement('option');
+      o.value = '';
+      o.textContent = 'No active IPv4 networks detected';
+      sel.appendChild(o);
+      status.textContent = 'No networks found. Ensure Wi-Fi / lab interfaces are up.';
+      return;
+    }
+
+    networksCache.forEach(n=>{
+      const o=document.createElement('option');
+      o.value=n.network;
+      o.textContent=`${n.network} — ${n.label}`;
+      sel.appendChild(o);
+    });
+
+    if (d.suggested_network){
+      sel.value = d.suggested_network;
+    }
+
+    updateCurrentNetworkLabel();
+    status.textContent = 'Networks detected. Select one and click “Scan selected network”.';
+    scanBtn.disabled = false;
+  } catch (e){
+    console.error(e);
+    status.textContent = 'Error while detecting networks. Check backend / console.';
+  }
+}
+
+function updateCurrentNetworkLabel(){
+  const sel = document.getElementById('networks');
+  const currentNet = document.getElementById('current-net');
+  const selectedValue = sel.value;
+
+  const entry = networksCache.find(n => n.network === selectedValue);
+  if (entry){
+    currentNet.textContent = `Current selection: ${entry.network} (${entry.label})`;
+  } else {
+    currentNet.textContent = '';
+  }
+}
+
+async function scan(){
+  const sel = document.getElementById('networks');
+  const net = sel.value;
+  const status = document.getElementById('status');
+  const summary = document.getElementById('summary');
+  const table = document.getElementById('results');
+  const body = document.querySelector('#results tbody');
+  const scanBtn = document.getElementById('scan-btn');
+
+  if (!net){
+    status.textContent = 'Please select a valid network.';
+    return;
+  }
+
+  const confirmMsg =
+    `You are about to scan ${net}.\n\n` +
+    'Only scan networks that you own or have explicit permission to test.\n\n' +
+    'Do you want to continue?';
+
+  if (!window.confirm(confirmMsg)){
+    status.textContent = 'Scan cancelled by user.';
+    return;
+  }
+
+  scanBtn.disabled = true;
+  status.textContent = `Scanning ${net} ... this may take some time depending on network size.`;
+  summary.textContent = '';
+  table.style.display = 'none';
+  body.innerHTML = '';
+
+  try {
+    const r = await fetch('/api/scan',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({network:net})
+    });
+    const d = await r.json();
+
+    if (d.status !== 'completed'){
+      status.textContent = d.message || 'Scan did not complete.';
+      scanBtn.disabled = false;
+      return;
+    }
+
+    status.textContent = `Scan complete for ${d.network}.`;
+    summary.textContent = `Detected ${d.device_count} device(s) on this network.`;
+
+    d.devices.forEach(x=>{
+      const tr=document.createElement('tr');
+      const ports = (x.open_ports && x.open_ports.length) ? x.open_ports.join(', ') : '-';
+      const riskLabel = x.risk && x.risk.label ? x.risk.label : 'Unknown';
+
+      tr.innerHTML = `
+        <td>${x.ip}</td>
+        <td>${x.vendor || ''}</td>
+        <td>${ports}</td>
+        <td class="${riskLabel.toLowerCase()}">${riskLabel}</td>
+      `;
+      body.appendChild(tr);
+    });
+
+    table.style.display = d.device_count > 0 ? 'table' : 'none';
+
+  } catch (e){
+    console.error(e);
+    status.textContent = 'Error during scan. See console/logs.';
+  } finally {
+    scanBtn.disabled = false;
+  }
+}
+
+document.getElementById('scan-btn').addEventListener('click', scan);
+document.getElementById('networks').addEventListener('change', updateCurrentNetworkLabel);
+document.getElementById('refresh-btn').addEventListener('click', loadNetworks);
+
+loadNetworks();
+</script>
+
+</body>
+</html>

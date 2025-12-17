@@ -1,0 +1,8 @@
+fastapi
+uvicorn[standard]
+psutil
+
+# For future integration with existing engine
+python-nmap
+jinja2
+rich

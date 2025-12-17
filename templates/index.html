@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>SafeHome-AI 2.0</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f8fafc;
+      color: #0f172a;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 4px;
+    }
+
+    .subtitle {
+      color: #475569;
+      margin-bottom: 30px;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 22px 26px;
+      margin-bottom: 24px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.05);
+    }
+
+    .step-title {
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin-bottom: 12px;
+    }
+
+    .help-text {
+      color: #475569;
+      font-size: 0.95rem;
+      margin-bottom: 12px;
+    }
+
+    select, button {
+      font-size: 1rem;
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 1px solid #cbd5f5;
+    }
+
+    select {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    button.primary {
+      background: #2563eb;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button.secondary {
+      background: #e2e8f0;
+      color: #0f172a;
+      border: none;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+
+    button.primary:hover {
+      background: #1e40af;
+    }
+
+    .result-box {
+      background: #f1f5f9;
+      border-radius: 10px;
+      padding: 16px;
+      margin-top: 12px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-right: 6px;
+    }
+
+    .high { background: #fee2e2; color: #b91c1c; }
+    .medium { background: #fef3c7; color: #92400e; }
+    .low { background: #dcfce7; color: #166534; }
+
+    .footer-note {
+      font-size: 0.85rem;
+      color: #64748b;
+      margin-top: 10px;
+    }
+
+    a.report-link {
+      display: inline-block;
+      margin-top: 10px;
+      font-weight: 600;
+      color: #2563eb;
+      text-decoration: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>SafeHome-AI 2.0</h1>
+    <div class="subtitle">
+      A local network security assistant for home and lab environments.  
+      Runs only on your device and scans only the networks you are connected to.
+    </div>
+
+    <!-- STEP 1 -->
+    <div class="card">
+      <div class="step-title">Step 1 – Select a network</div>
+      <div class="help-text">
+        Choose the network you want to scan (for example, your home Wi-Fi or lab network).
+      </div>
+
+      <select id="networkSelect"></select>
+      <button class="secondary" onclick="loadNetworks()">Refresh networks</button>
+
+      <div class="footer-note">
+        Scan only networks that you own or administer.
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="card">
+      <div class="step-title">Step 2 – Run security scan</div>
+      <div class="help-text">
+        SafeHome-AI will detect devices, open ports, and highlight potential risks.
+      </div>
+
+      <button class="primary" onclick="startScan()">Scan selected network</button>
+    </div>
+
+    <!-- RESULTS -->
+    <div class="card" id="resultsCard" style="display:none;">
+      <div class="step-title">Scan result summary</div>
+      <div class="result-box" id="summaryBox"></div>
+
+      <a href="/report/html" target="_blank" class="report-link">
+        View detailed HTML report →
+      </a>
+    </div>
+  </div>
+
+<script>
+async function loadNetworks() {
+  const res = await fetch('/api/networks');
+  const data = await res.json();
+
+  const select = document.getElementById('networkSelect');
+  select.innerHTML = '';
+
+  data.networks.forEach(net => {
+    const opt = document.createElement('option');
+    opt.value = net.network;
+    opt.textContent = `${net.network} — ${net.label}`;
+    select.appendChild(opt);
+  });
+}
+
+async function startScan() {
+  const network = document.getElementById('networkSelect').value;
+  if (!network) return alert('Please select a network.');
+
+  const res = await fetch('/api/scan', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({network})
+  });
+
+  const data = await res.json();
+
+  let high = 0, medium = 0, low = 0;
+  data.devices.forEach(d => {
+    if (d.risk.label === 'High') high++;
+    else if (d.risk.label === 'Medium') medium++;
+    else if (d.risk.label === 'Low') low++;
+  });
+
+  document.getElementById('summaryBox').innerHTML = `
+    <span class="badge high">High risk: ${high}</span>
+    <span class="badge medium">Medium risk: ${medium}</span>
+    <span class="badge low">Low risk: ${low}</span>
+    <p class="footer-note">
+      Review high-risk devices first. A detailed report is available below.
+    </p>
+  `;
+
+  document.getElementById('resultsCard').style.display = 'block';
+}
+
+loadNetworks();
+</script>
+</body>
+</html>
