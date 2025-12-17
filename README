@@ -1,153 +1,195 @@
-SafeHome-AI
+# SafeHome-AI  
+**AI-Driven Security Visibility for Smart Home and IoT Networks**
 
-AI-Driven Security Visibility for Smart Home and IoT Networks
+---
 
-Overview
+## Overview
+SafeHome-AI is a lightweight, AI-assisted security assessment tool designed to improve **visibility, awareness, and risk understanding** in smart home and small-scale IoT networks.
 
-SafeHome-AI is a lightweight, AI-assisted security assessment tool designed to improve visibility, awareness, and risk understanding in smart home and small-scale IoT networks.
+Unlike traditional enterprise security tools, SafeHome-AI focuses on **interpretability and usability**, enabling users to understand what devices exist in their network, how exposed they are, and where potential security risks may lie — without requiring deep cybersecurity expertise.
 
-Unlike traditional enterprise security tools, SafeHome-AI focuses on interpretability and usability, enabling users to understand what devices exist in their network, how exposed they are, and where potential security risks may lie — without requiring deep cybersecurity expertise.
+This project is developed as part of **AIOTICS Security Labs (ASL)** and is currently released as a **research and incubation preview**.
 
-This project is developed as part of AIOTICS Security Labs (ASL) and is currently released as a research and incubation preview.
+---
 
-Key Features
+## Key Features
+- Automated discovery of active devices in a local network  
+- Identification of open ports and exposed services  
+- Rule-based and heuristic risk assessment of devices  
+- AI-assisted interpretation of security posture  
+- Human-readable security reports  
+- Fully local execution (no cloud dependency)  
 
-Automated discovery of active devices in a local network
+---
 
-Identification of open ports and exposed services
-
-Rule-based and heuristic risk assessment of devices
-
-AI-assisted interpretation of security posture
-
-Human-readable security reports
-
-Fully local execution (no cloud dependency)
-
-What SafeHome-AI Does Not Do
-
+## What SafeHome-AI Does *Not* Do
 To ensure ethical usage and legal compliance, SafeHome-AI:
 
-Does not perform active exploitation
+- Does **not** perform active exploitation  
+- Does **not** execute intrusive attacks  
+- Does **not** collect or exfiltrate user data  
+- Does **not** store data on external servers  
 
-Does not execute intrusive attacks
+The tool is intended strictly for **security awareness, assessment, education, and research**.
 
-Does not collect or exfiltrate user data
+---
 
-Does not store data on external servers
+## Intended Users
+- Smart home users seeking basic security visibility  
+- Educational institutions and cybersecurity labs  
+- IoT security researchers and students  
+- Training programs and controlled test environments  
 
-The tool is intended strictly for security awareness, assessment, education, and research.
+---
 
-Intended Users
-
-Smart home users seeking basic security visibility
-
-Educational institutions and cybersecurity labs
-
-IoT security researchers and students
-
-Training programs and controlled test environments
-
-System Architecture (High-Level)
-
+## System Architecture (High-Level)
 SafeHome-AI is organized into the following logical components:
 
-Scanner Module: Network discovery and port analysis
+- **Scanner Module** – Network discovery and port analysis  
+- **Risk Engine** – Rule-based and AI-assisted risk evaluation  
+- **Report Generator** – Structured and interpretable output  
+- **Web Interface** – Visualization and user interaction layer  
 
-Risk Engine: Rule-based and AI-assisted risk evaluation
+The design emphasizes **modularity, explainability, and low resource overhead**.
 
-Report Generator: Structured and interpretable output
+---
 
-Web Interface: Visualization and user interaction layer
+## Repository Structure
+# SafeHome-AI  
+**AI-Driven Security Visibility for Smart Home and IoT Networks**
 
-The design emphasizes modularity, explainability, and low resource overhead.
+---
 
-Repository Structure
+## Overview
+SafeHome-AI is a lightweight, AI-assisted security assessment tool designed to improve **visibility, awareness, and risk understanding** in smart home and small-scale IoT networks.
+
+Unlike traditional enterprise security tools, SafeHome-AI focuses on **interpretability and usability**, enabling users to understand what devices exist in their network, how exposed they are, and where potential security risks may lie — without requiring deep cybersecurity expertise.
+
+This project is developed as part of **AIOTICS Security Labs (ASL)** and is currently released as a **research and incubation preview**.
+
+---
+
+## Key Features
+- Automated discovery of active devices in a local network  
+- Identification of open ports and exposed services  
+- Rule-based and heuristic risk assessment of devices  
+- AI-assisted interpretation of security posture  
+- Human-readable security reports  
+- Fully local execution (no cloud dependency)  
+
+---
+
+## What SafeHome-AI Does *Not* Do
+To ensure ethical usage and legal compliance, SafeHome-AI:
+
+- Does **not** perform active exploitation  
+- Does **not** execute intrusive attacks  
+- Does **not** collect or exfiltrate user data  
+- Does **not** store data on external servers  
+
+The tool is intended strictly for **security awareness, assessment, education, and research**.
+
+---
+
+## Intended Users
+- Smart home users seeking basic security visibility  
+- Educational institutions and cybersecurity labs  
+- IoT security researchers and students  
+- Training programs and controlled test environments  
+
+---
+
+## System Architecture (High-Level)
+SafeHome-AI is organized into the following logical components:
+
+- **Scanner Module** – Network discovery and port analysis  
+- **Risk Engine** – Rule-based and AI-assisted risk evaluation  
+- **Report Generator** – Structured and interpretable output  
+- **Web Interface** – Visualization and user interaction layer  
+
+The design emphasizes **modularity, explainability, and low resource overhead**.
+
+---
+
+## Repository Structure
 safehome-ai/
 │
-├── scanner/          # Network discovery and risk analysis modules
-├── reports/          # Report templates and generators
-├── templates/        # Web interface templates
-├── static/           # Static assets (CSS, images)
+├── scanner/ # Network discovery and risk analysis modules
+├── reports/ # Report templates and generators
+├── templates/ # Web interface templates
+├── static/ # Static assets (CSS, images)
 │
-├── app.py            # Main application entry point
-├── engine.py         # Core analysis and orchestration logic
-├── requirements.txt  # Python dependencies
+├── app.py # Main application entry point
+├── engine.py # Core analysis and orchestration logic
+├── requirements.txt # Python dependencies
 ├── sample_report.png # Sample output report
 
-Installation & Setup
-Prerequisites
 
-Python 3.8 or higher
+---
 
-Local network access (for device discovery)
+## Installation & Setup
 
-Administrator / sudo privileges (if required by scanner)
+### Prerequisites
+- Python 3.8 or higher  
+- Local network access (for device discovery)  
+- Administrator / sudo privileges (if required by the scanner)  
 
-Steps
-git clone https://github.com/<your-username>/safehome-ai.git
-cd safehome-ai
+### Steps
+```bash
+git clone https://github.com/learnwithvidya/safehome-ai.git
+python -m venv venv
+.\venv\Scripts\Activate.ps1
 pip install -r requirements.txt
-python app.py
+uvicorn app:app --reload
+Open on browser: http://127.0.0.1:8000/ui
 
 
-The application will start locally and can be accessed via a web browser as indicated in the console output.
-
-Sample Output
-
-A sample security report generated by SafeHome-AI is provided below:
+## Sample Output
+A sample security report generated by SafeHome-AI is shown below:
 
 The report summarizes:
+- Discovered devices  
+- Open ports and services  
+- Risk levels with explanations  
+- Actionable security recommendations  
 
-Discovered devices
+---
 
-Open ports and services
+## Current Status
+- **Version:** v2.0  
+- **Release Type:** Research / Incubation Preview  
+- **Deployment:** Local execution  
+- **Validation:** Ongoing  
 
-Risk levels and explanations
+This version is suitable for:
+- Demonstrations  
+- Academic evaluation  
+- Incubator review  
+- Controlled pilot studies  
 
-Actionable recommendations
+---
 
-Current Status
+## Roadmap (High-Level)
+- Controlled pilot testing in real home networks  
+- Usability feedback and refinement  
+- Improved risk scoring models  
+- Extended device classification  
+- Preparation for broader deployment  
 
-Version: v2.0
+---
 
-Release type: Research / Incubation Preview
+## Ethical Use & Disclaimer
+SafeHome-AI is intended for **defensive security research and education only**.  
+Users must ensure that scans are performed **only on networks and devices they own or are authorized to assess**.
 
-Deployment: Local execution
+The developers assume no responsibility for misuse.
 
-Validation: In progress
+---
 
-This version is stable and suitable for:
+## About the Developer
+SafeHome-AI is developed by **AIOTICS Security Labs (ASL)**, a research-driven cybersecurity initiative focused on securing IoT, OT, and smart infrastructure systems.
 
-Demonstrations
+**Founder:** Dr. Vidya Rao  
+Assistant Professor, Manipal Institute of Technology (MAHE)  
+Co-Coordinator, MAHE-ISAC Centre of Excellence for Cybersecurity  
 
-Academic evaluation
-
-Incubator review
-
-Controlled pilot studies
-
-Roadmap (High-Level)
-
-Controlled pilot testing in real home networks
-
-Usability feedback and refinement
-
-Improved risk scoring models
-
-Extended device classification
-
-Preparation for broader deployment
-
-Ethical Use & Disclaimer
-
-SafeHome-AI is intended for defensive security research and education only.
-Users are responsible for ensuring that scans are conducted only on networks and devices they own or are authorized to assess.
-
-The developers assume no liability for misuse.
-
-About the Developer
-
-SafeHome-AI is developed by AIOTICS Security Labs (ASL), a research-driven cybersecurity initiative focused on securing IoT, OT, and smart infrastructure systems.
-
-Founder: Vidya Rao
